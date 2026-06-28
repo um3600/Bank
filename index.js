@@ -1,8 +1,13 @@
 console.log("Welcome To UBR Bank");
 
-var User = ["abc", "def", "ghi"];
-var Password = ["1234", "5678", "4321"];
-var Balance = [10000.43, 5000.21, 8000.04];
+var User = ["abc", "def", "hij"];
+var Password = ["123", "567", "789"];
+var Balance = [100, 200, 300];
+var Statement = [
+    [],
+    [],
+    []
+];
 
 var app = true;
 
@@ -48,135 +53,166 @@ while (app) {
 
             console.log("Email Cannot Be Only Numbers");
             continue;
-         }
+        }
 
 
-            var newPass = prompt("Enter New Password:");
+        var newPass = prompt("Enter New Password:");
 
-            if (newPass === "") {
+        if (newPass === "") {
 
-                console.log("Password Cannot Be Empty");
-                continue;
-
-            }
-
-            if (User.includes(newUser)) {
-
-                console.log("User Already Exists");
-                continue;
-
-            }
-
-            User.push(newUser);
-            Password.push(newPass);
-            Balance.push(0);
-
-            currentUserIndex = User.length - 1;
-
-            console.log("Signup Successful");
-        } else if (info === "3") {
-
-            console.log("Thank You For Using UBR Bank");
-            app = false;
-
-        } else {
-
-            console.log("Invalid Option");
+            console.log("Password Cannot Be Empty");
             continue;
 
         }
 
-        while (currentUserIndex !== -1) {
+        if (User.includes(newUser)) {
 
-            var choice = prompt(`
+            console.log("User Already Exists");
+            continue;
+
+        }
+
+        User.push(newUser);
+        Password.push(newPass);
+        Balance.push(0);
+        Statement.push([]);
+
+        currentUserIndex = User.length - 1;
+
+        console.log("Signup Successful");
+    } else if (info === "3") {
+
+        console.log("Thank You For Using UBR Bank");
+        app = false;
+
+    } else {
+
+        console.log("Invalid Option");
+        continue;
+
+    }
+
+    while (currentUserIndex !== -1) {
+
+        var choice = prompt(`
 1. Withdraw
 2. Deposit
 3. Check Balance
 4. Transfer Money
-5. Logout
+5. Bank Statement
+6. Logout
 `);
 
-            if (choice === "1") {
+        if (choice === "1") {
 
-                var amount = Number(prompt("Enter Amount:"));
+            var amount = Number(prompt("Enter Amount:"));
+
+            if (amount > 0 && amount <= Balance[currentUserIndex]) {
+
+                Balance[currentUserIndex] -= amount;
+
+                Statement[currentUserIndex].push("Withdraw: " + amount);
+                console.log("Withdraw Successful");
+                console.log("Remaining Balance: " + Balance[currentUserIndex]);
+
+            } else {
+
+                alert("Insufficient Balance");
+
+            }
+
+        } else if (choice === "2") {
+
+            var amount = Number(prompt("Enter Amount:"));
+
+            if (amount > 0) {
+
+                Balance[currentUserIndex] += amount;
+
+                Statement[currentUserIndex].push("Deposited: " + amount);
+
+                console.log("Deposit Successful");
+                console.log("Current Balance: " + Balance[currentUserIndex]);
+
+            } else {
+
+                alert("Invalid Amount");
+
+            }
+
+        } else if (choice === "3") {
+
+            console.log("Current Balance: " + Balance[currentUserIndex]);
+
+        } else if (choice === "6") {
+
+            console.log("Logged Out Successfully");
+            currentUserIndex = -1;
+        }
+        else if (choice === "5") {
+
+            console.log("===== UBR BANK STATEMENT =====");
+
+            if (Statement[currentUserIndex].length === 0) {
+
+                console.log("No Transaction History");
+
+            } else {
+
+                for (var i = 0; i < Statement[currentUserIndex].length; i++) {
+
+                    console.log((i + 1) + ". " + Statement[currentUserIndex][i]);
+
+                }
+
+            }
+
+        }
+        else if (choice === "4") {
+
+            var receiver = prompt("Enter Receiver Email:");
+
+            var receiverIndex = User.indexOf(receiver);
+
+            if (receiverIndex === -1) {
+
+                alert("Receiver Not Found");
+
+            } else if (receiverIndex === currentUserIndex) {
+
+                alert("You Cannot Transfer Money To Yourself");
+
+            } else {
+
+                var amount = Number(prompt("Enter Amount To Transfer:"));
 
                 if (amount > 0 && amount <= Balance[currentUserIndex]) {
 
                     Balance[currentUserIndex] -= amount;
+                    Balance[receiverIndex] += amount;
 
-                    console.log("Withdraw Successful");
-                    console.log("Remaining Balance: " + Balance[currentUserIndex]);
+                    Statement[currentUserIndex].push(
+                        "Transferred " + amount + " To " + User[receiverIndex]
+                    );
 
+                    Statement[receiverIndex].push(
+                        "Received " + amount + " From " + User[currentUserIndex]
+                    );
+
+                    console.log("Transferred To: " + User[receiverIndex]);
+                    console.log("Current Balance: " + Balance[currentUserIndex]);
                 } else {
 
                     alert("Insufficient Balance");
 
                 }
 
-            } else if (choice === "2") {
-
-                var amount = Number(prompt("Enter Amount:"));
-
-                if (amount > 0) {
-
-                    Balance[currentUserIndex] += amount;
-
-                    console.log("Deposit Successful");
-                    console.log("Current Balance: " + Balance[currentUserIndex]);
-
-                } else {
-
-                    alert("Invalid Amount");
-
-                }
-
-            } else if (choice === "3") {
-
-                console.log("Current Balance: " + Balance[currentUserIndex]);
-
-            } else if (choice === "5") {
-
-                console.log("Logged Out Successfully");
-                currentUserIndex = -1;
-
-            } else if (choice === "4") {
-
-                var receiver = prompt("Enter Receiver Email:");
-
-                var receiverIndex = User.indexOf(receiver);
-
-                if (receiverIndex === -1) {
-
-                    alert("Receiver Not Found");
-
-                } else if (receiverIndex === currentUserIndex) {
-
-                    alert("You Cannot Transfer Money To Yourself");
-
-                } else {
-
-                    var amount = Number(prompt("Enter Amount To Transfer:"));
-
-                    if (amount > 0 && amount <= Balance[currentUserIndex]) {
-
-                        Balance[currentUserIndex] -= amount;
-                        Balance[receiverIndex] += amount;
-
-                        console.log("Transfer Successful");
-                        console.log("Your Current Balance: " + Balance[currentUserIndex]);
-
-                    } else {
-
-                        alert("Insufficient Balance");
-
-                    }
-
-                }
-
-            } else {
-
-                alert("Invalid Choice");
-
             }
+
+        } else {
+
+            alert("Invalid Choice");
+
         }
     }
+}
