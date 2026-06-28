@@ -30,7 +30,7 @@ while (app) {
 
         } else {
 
-            console.log("Invalid Email or Password");
+            alert("Invalid Email or Password");
             continue;
 
         }
@@ -39,39 +39,56 @@ while (app) {
 
         var newUser = prompt("Enter New Email:");
 
-        if (User.includes(newUser)) {
+        if (newUser === "") {
 
-            console.log("User Already Exists");
+            console.log("Email Cannot Be Empty");
+            continue;
+
+        } else if (!isNaN(newUser)) {
+
+            console.log("Email Cannot Be Only Numbers");
+            continue;
+         }
+
+
+            var newPass = prompt("Enter New Password:");
+
+            if (newPass === "") {
+
+                console.log("Password Cannot Be Empty");
+                continue;
+
+            }
+
+            if (User.includes(newUser)) {
+
+                console.log("User Already Exists");
+                continue;
+
+            }
+
+            User.push(newUser);
+            Password.push(newPass);
+            Balance.push(0);
+
+            currentUserIndex = User.length - 1;
+
+            console.log("Signup Successful");
+        } else if (info === "3") {
+
+            console.log("Thank You For Using UBR Bank");
+            app = false;
+
+        } else {
+
+            console.log("Invalid Option");
             continue;
 
         }
 
-        var newPass = prompt("Enter New Password:");
+        while (currentUserIndex !== -1) {
 
-        User.push(newUser);
-        Password.push(newPass);
-        Balance.push(0);
-
-        currentUserIndex = User.length - 1;
-
-        console.log("Signup Successful");
-        console.log("Logged In Successfully");
-
-    } else if (info === "3") {
-
-        console.log("Thank You For Using UBR Bank");
-        app = false;
-
-    } else {
-
-        console.log("Invalid Option");
-        continue;
-
-    }
-
-    while (currentUserIndex !== -1) {
-
-        var choice = prompt(`
+            var choice = prompt(`
 1. Withdraw
 2. Deposit
 3. Check Balance
@@ -79,87 +96,87 @@ while (app) {
 5. Logout
 `);
 
-        if (choice === "1") {
+            if (choice === "1") {
 
-            var amount = Number(prompt("Enter Amount:"));
-
-            if (amount > 0 && amount <= Balance[currentUserIndex]) {
-
-                Balance[currentUserIndex] -= amount;
-
-                console.log("Withdraw Successful");
-                console.log("Remaining Balance: " + Balance[currentUserIndex]);
-
-            } else {
-
-                console.log("Insufficient Balance");
-
-            }
-
-        } else if (choice === "2") {
-
-            var amount = Number(prompt("Enter Amount:"));
-
-            if (amount > 0) {
-
-                Balance[currentUserIndex] += amount;
-
-                console.log("Deposit Successful");
-                console.log("Current Balance: " + Balance[currentUserIndex]);
-
-            } else {
-
-                console.log("Invalid Amount");
-
-            }
-
-        } else if (choice === "3") {
-
-            console.log("Current Balance: " + Balance[currentUserIndex]);
-
-        } else if (choice === "5") {
-
-            console.log("Logged Out Successfully");
-            currentUserIndex = -1;
-
-        } else if (choice === "4") {
-
-            var receiver = prompt("Enter Receiver Email:");
-
-            var receiverIndex = User.indexOf(receiver);
-
-            if (receiverIndex === -1) {
-
-                console.log("Receiver Not Found");
-
-            } else if (receiverIndex === currentUserIndex) {
-
-                console.log("You Cannot Transfer Money To Yourself");
-
-            } else {
-
-                var amount = Number(prompt("Enter Amount To Transfer:"));
+                var amount = Number(prompt("Enter Amount:"));
 
                 if (amount > 0 && amount <= Balance[currentUserIndex]) {
 
                     Balance[currentUserIndex] -= amount;
-                    Balance[receiverIndex] += amount;
 
-                    console.log("Transfer Successful");
-                    console.log("Your Current Balance: " + Balance[currentUserIndex]);
+                    console.log("Withdraw Successful");
+                    console.log("Remaining Balance: " + Balance[currentUserIndex]);
 
                 } else {
 
-                    console.log("Insufficient Balance");
+                    alert("Insufficient Balance");
 
                 }
 
+            } else if (choice === "2") {
+
+                var amount = Number(prompt("Enter Amount:"));
+
+                if (amount > 0) {
+
+                    Balance[currentUserIndex] += amount;
+
+                    console.log("Deposit Successful");
+                    console.log("Current Balance: " + Balance[currentUserIndex]);
+
+                } else {
+
+                    alert("Invalid Amount");
+
+                }
+
+            } else if (choice === "3") {
+
+                console.log("Current Balance: " + Balance[currentUserIndex]);
+
+            } else if (choice === "5") {
+
+                console.log("Logged Out Successfully");
+                currentUserIndex = -1;
+
+            } else if (choice === "4") {
+
+                var receiver = prompt("Enter Receiver Email:");
+
+                var receiverIndex = User.indexOf(receiver);
+
+                if (receiverIndex === -1) {
+
+                    alert("Receiver Not Found");
+
+                } else if (receiverIndex === currentUserIndex) {
+
+                    alert("You Cannot Transfer Money To Yourself");
+
+                } else {
+
+                    var amount = Number(prompt("Enter Amount To Transfer:"));
+
+                    if (amount > 0 && amount <= Balance[currentUserIndex]) {
+
+                        Balance[currentUserIndex] -= amount;
+                        Balance[receiverIndex] += amount;
+
+                        console.log("Transfer Successful");
+                        console.log("Your Current Balance: " + Balance[currentUserIndex]);
+
+                    } else {
+
+                        alert("Insufficient Balance");
+
+                    }
+
+                }
+
+            } else {
+
+                alert("Invalid Choice");
+
             }
-
-        } else {
-
-            console.log("Invalid Choice");
-
         }
     }
-}
